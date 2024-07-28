@@ -38,7 +38,7 @@ jobs:
           context: .
           # file: Dockerfile.aarch64
           build-args: |
-            ENABLED_MODULES=http-flv-module headers-more
+            ENABLED_MODULES=new-headers-more-nginx-module
           push: true # push to docker hub
           tags: |
               ilkeiii/nginx:latest
