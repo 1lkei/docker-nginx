@@ -38,7 +38,7 @@ jobs:
           context: .
           file: Dockerfile.alpine
           build-args: |
-            ENABLED_MODULES=http-flv-module headers-more
+            ENABLED_MODULES=http-flv-module
             NGINX_FROM_IMAGE=nginx:stable-alpine
           push: true # push to docker hub
           tags: |
