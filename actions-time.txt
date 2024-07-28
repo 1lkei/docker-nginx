@@ -1,1 +1,2 @@
-2024.07.28 v1
+2024.07.28 v2
+rename and update readme
