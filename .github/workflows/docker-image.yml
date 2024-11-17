@@ -22,6 +22,11 @@ jobs:
           username: 1lkei
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: get image id
+        run: |
+          docker pull nginx:stable-alpine
+          remote_info=$(docker images nginx:stable-alpine --format '{{.Repository}}:{{.Tag}} {{.ID}}')
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.2.0
 
@@ -48,8 +53,6 @@ jobs:
 
       - name: Commit updated version
         run: |
-          docker pull nginx:stable-alpine
-          remote_info=$(docker images nginx:stable-alpine --format '{{.Repository}}:{{.Tag}} {{.ID}}')
           echo "$remote_info" > nginx_info
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
