@@ -1,10 +1,7 @@
 name: Docker images build and push
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - 'actions-time.txt'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,30 +24,6 @@ jobs:
           docker pull nginx:stable-alpine
           remote_info=$(docker images nginx:stable-alpine --format '{{.Repository}}:{{.Tag}} {{.ID}}')
           echo "remote_info=$remote_info" >> $GITHUB_ENV
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.2.0
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.7.1
-          
-      - name: Run sh
-        run: |
-          chmod +x get-modules.sh
-          ./get-modules.sh
-
-      - name: Docker build-push
-        uses: docker/build-push-action@v6.9.0
-        with:
-          context: .
-          file: Dockerfile.alpine
-          build-args: |
-            ENABLED_MODULES=http-flv-module
-            NGINX_FROM_IMAGE=nginx:stable-alpine
-          push: true # push to docker hub
-          tags: |
-              1lkei/nginx:latest
-          platforms: linux/amd64,linux/arm64,linux/arm/v7 #,linux/386,linux/arm/v6,linux/s390x
 
       - name: Commit updated version
         run: |
