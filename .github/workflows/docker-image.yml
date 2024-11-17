@@ -22,11 +22,18 @@ jobs:
           username: 1lkei
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: get image id
+      - name: Compare image
         run: |
           docker pull nginx:stable-alpine
           remote_info=$(docker images nginx:stable-alpine --format '{{.Repository}}:{{.Tag}} {{.ID}}')
           echo "remote_info=$remote_info" >> $GITHUB_ENV
+          
+          if [ -f ./nginx_info ]; then
+            local_info=$(cat ./nginx_info)
+          else
+            local_info="none"
+          fi
+          echo "local_info=$local_info" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.2.0
@@ -53,6 +60,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7 #,linux/386,linux/arm/v6,linux/s390x
 
       - name: Commit updated version
+        if: env.local_info != env.remote_info
         run: |
           echo "$remote_info" > nginx_info
           git config user.name "github-actions[bot]"
